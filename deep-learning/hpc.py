@@ -44,7 +44,7 @@ size_layer = 128
 timestamp = 5
 epoch = 300
 dropout_rate = 0.8
-test_size = 3
+test_size = DAYS_TO_PREDICT
 learning_rate = 0.01
 
 df_train = df_log
@@ -103,10 +103,7 @@ def anchor(signal, weight):
     return buffer
 
 
-# from tensorflow.python.framework import ops
-
 def forecast():
-    #     ops.reset_default_graph()
     tf.reset_default_graph()
     modelnn = Model(
         learning_rate, num_layers, df_log.shape[1], size_layer, df_log.shape[1], dropout_rate
@@ -224,9 +221,11 @@ x_range_future = np.arange(len(results[0]))
 # plt.show()
 
 accepted_results_arr = np.array(accepted_results)
-print(accepted_results_arr[:, -3:])
 
-last_3_days = accepted_results_arr[:, -3:]
+last_3_days = accepted_results_arr[:, -DAYS_TO_PREDICT:]
+print('last_3_days:')
+print(last_3_days)
+
 one_day_errors = []
 for index, value in enumerate(true_values):
     average = np.average(last_3_days[:, index])
@@ -247,3 +246,19 @@ for index, value in enumerate(true_values):
 
 print('one_day_errors_raw:')
 print(one_day_errors_raw)
+
+three_day_avg_error = np.average(one_day_errors)
+three_day_avg_error_raw = np.average(one_day_errors_raw)
+
+print('three_day_avg_error:')
+print(three_day_avg_error)
+print('three_day_avg_error_raw:')
+print(three_day_avg_error_raw)
+
+three_day_exp_error = (one_day_errors[0] + one_day_errors[1] * 2 + one_day_errors[2] * 3) / 6
+three_day_exp_error_raw = (one_day_errors_raw[0] + one_day_errors_raw[1] * 2 + one_day_errors_raw[2] * 3) / 6
+
+print('three_day_exp_error:')
+print(three_day_exp_error)
+print('three_day_exp_error_raw:')
+print(three_day_exp_error_raw)
