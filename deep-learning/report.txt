@@ -1,0 +1,35 @@
+TensorFlow 2.0 Upgrade Script
+-----------------------------
+Converted 1 files
+Detected 2 issues that require attention
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+File: how-to-forecast.ipynb
+--------------------------------------------------------------------------------
+how-to-forecast.ipynb:53:15: WARNING: Using member tf.contrib.rnn.DropoutWrapper in deprecated module tf.contrib.rnn. (Manual edit required) tf.contrib.rnn.* has been deprecated, and widely used cells/functions will be moved to tensorflow/addons repository. Please check it there and file Github issues if necessary.
+how-to-forecast.ipynb:53:15: ERROR: Using member tf.contrib.rnn.DropoutWrapper in deprecated module tf.contrib. tf.contrib.rnn.DropoutWrapper cannot be converted automatically. tf.contrib will not be distributed with TensorFlow 2.0, please consider an alternative in non-contrib TensorFlow, a community-maintained repository such as tensorflow/addons, or fork the required code.
+================================================================================
+Detailed log follows:
+
+================================================================================
+--------------------------------------------------------------------------------
+Processing file 'how-to-forecast.ipynb'
+ outputting to 'how-to-forecast-upgraded.ipynb'
+--------------------------------------------------------------------------------
+
+45:19: INFO: Renamed 'tf.nn.rnn_cell.LSTMCell' to 'tf.compat.v1.nn.rnn_cell.LSTMCell'
+47:20: INFO: Renamed 'tf.nn.rnn_cell.MultiRNNCell' to 'tf.compat.v1.nn.rnn_cell.MultiRNNCell'
+51:17: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+52:17: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+53:15: WARNING: Using member tf.contrib.rnn.DropoutWrapper in deprecated module tf.contrib.rnn. (Manual edit required) tf.contrib.rnn.* has been deprecated, and widely used cells/functions will be moved to tensorflow/addons repository. Please check it there and file Github issues if necessary.
+53:15: ERROR: Using member tf.contrib.rnn.DropoutWrapper in deprecated module tf.contrib. tf.contrib.rnn.DropoutWrapper cannot be converted automatically. tf.contrib will not be distributed with TensorFlow 2.0, please consider an alternative in non-contrib TensorFlow, a community-maintained repository such as tensorflow/addons, or fork the required code.
+56:28: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+59:40: INFO: Renamed 'tf.nn.dynamic_rnn' to 'tf.compat.v1.nn.dynamic_rnn'
+62:22: INFO: Renamed 'tf.layers.dense' to 'tf.compat.v1.layers.dense'
+63:20: INFO: Added keywords to args of function 'tf.reduce_mean'
+64:25: INFO: Renamed 'tf.train.AdamOptimizer' to 'tf.compat.v1.train.AdamOptimizer'
+86:4: INFO: Renamed 'tf.reset_default_graph' to 'tf.compat.v1.reset_default_graph'
+90:11: INFO: Renamed 'tf.InteractiveSession' to 'tf.compat.v1.InteractiveSession'
+91:13: INFO: Renamed 'tf.global_variables_initializer' to 'tf.compat.v1.global_variables_initializer'
+--------------------------------------------------------------------------------
+
