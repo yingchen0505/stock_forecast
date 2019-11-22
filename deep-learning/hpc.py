@@ -235,9 +235,6 @@ for index, value in enumerate(true_values):
 print('one_day_errors:')
 print(one_day_errors)
 
-results_frame = pd.DataFrame(accepted_results)
-results_frame.to_csv('./{}_{}_predictions.csv'.format(COMPANY_NAME, COLUMN_USED))
-
 one_day_errors_raw = []
 for index, value in enumerate(true_values):
     average = np.average(last_3_days[:, index])
@@ -262,3 +259,6 @@ print('three_day_exp_error:')
 print(three_day_exp_error)
 print('three_day_exp_error_raw:')
 print(three_day_exp_error_raw)
+
+results_frame = pd.DataFrame(accepted_results)
+results_frame.to_csv('./{}_{}_predictions.csv'.format(COMPANY_NAME, COLUMN_USED))
