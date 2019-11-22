@@ -1,22 +1,22 @@
 #!/bin/bash
 
-#PBS -N HPC
+#PBS -N hpc_tesla_close
 #PBS -q normal
-#PBS -l select=1:ncpus=10:mem=40G
+#PBS -l select=1:ncpus=20:mem=80G
 #PBS -l walltime=99:00:00
 #PBS -P Personal
 #PBS -j oe
-#PBS -o ./hpc4.o
-#PBS -e ./hpc4.e
+#PBS -o ./hpc_tesla_close.o
+#PBS -e ./hpc_tesla_close.e
 # mail alert at (b)eginning, (e)nd and (a)bortion of execution
 #PBS -m bea
 # send mail to the following address
 #PBS -M e0010911@u.nus.edu
 
-echo hpc
+echo hpc_tesla_close
 pwd
 cd $PBS_O_WORKDIR
 module load anaconda/3
 source activate tf_1.9
 export PYTHONHOME=${HOME}/.conda/envs/tf_1.9
-python hpc.py
+python hpc_tesla_close.py
