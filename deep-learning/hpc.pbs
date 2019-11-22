@@ -6,8 +6,8 @@
 #PBS -l walltime=99:00:00
 #PBS -P Personal
 #PBS -j oe
-#PBS -o ./hpc3.o
-#PBS -e ./hpc3.e
+#PBS -o ./hpc4.o
+#PBS -e ./hpc4.e
 # mail alert at (b)eginning, (e)nd and (a)bortion of execution
 #PBS -m bea
 # send mail to the following address
