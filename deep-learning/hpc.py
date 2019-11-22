@@ -17,11 +17,24 @@ from tqdm import tqdm
 # sns.set()
 # tf.compat.v1.random.set_random_seed(1234)
 
-df = pd.read_csv('../dataset/apple_train.csv')
+COMPANY_NAME = 'tesla'
+COLUMN_USED = 'Close'
+DAYS_TO_PREDICT = 3
+
+df = pd.read_csv('../dataset/{}.csv'.format(COMPANY_NAME))
 df.head()
 
-minmax = MinMaxScaler().fit(df.iloc[:, 4:5].astype('float32')) # Close index
-df_log = minmax.transform(df.iloc[:, 4:5].astype('float32')) # Close index
+if COLUMN_USED is 'Close':
+    col_index = [4, 5] # Close index
+elif COLUMN_USED is 'High':
+    col_index = [2, 3] # High index
+else:
+    col_index = [3, 4] # Low index
+
+minmax = MinMaxScaler().fit(df.iloc[:-DAYS_TO_PREDICT, col_index[0]: col_index[1]].astype('float32'))
+df_log = minmax.transform(df.iloc[:-DAYS_TO_PREDICT, col_index[0]: col_index[1]].astype('float32'))
+true_values = np.array(df.iloc[-DAYS_TO_PREDICT:, col_index[0]: col_index[1]])
+
 df_log = pd.DataFrame(df_log)
 df_log.head()
 
@@ -35,7 +48,7 @@ test_size = 3
 learning_rate = 0.01
 
 df_train = df_log
-df.shape, df_train.shape
+print(df.shape, df_train.shape)
 
 
 class Model:
@@ -186,21 +199,22 @@ date_ori = pd.to_datetime(df.iloc[:, 0]).tolist()
 for i in range(test_size):
     date_ori.append(date_ori[-1] + timedelta(days = 1))
 date_ori = pd.Series(date_ori).dt.strftime(date_format = '%Y-%m-%d').tolist()
-date_ori[-5:]
+print(date_ori[-5:])
 
 accepted_results = []
 for r in results:
-    if (np.array(r[-test_size:]) < np.min(df['Close'])).sum() == 0 and \
-    (np.array(r[-test_size:]) > np.max(df['Close']) * 2).sum() == 0:
+    if (np.array(r[-test_size:]) < np.min(df[COLUMN_USED])).sum() == 0 and \
+    (np.array(r[-test_size:]) > np.max(df[COLUMN_USED]) * 2).sum() == 0:
         accepted_results.append(r)
 len(accepted_results)
 
-accuracies = [calculate_accuracy(df['Close'].values, r[:-test_size]) for r in accepted_results]
+accuracies = [calculate_accuracy(df[COLUMN_USED].values, r[:-test_size]) for r in accepted_results]
+print('average accuracy: %.4f'%(np.mean(accuracies)))
 
 # plt.figure(figsize = (15, 5))
 # for no, r in enumerate(accepted_results):
 #     plt.plot(r, label = 'forecast %d'%(no + 1))
-# # plt.plot(df['Close'], label = 'true trend', c = 'black')
+# # plt.plot(df[COLUMN_USED], label = 'true trend', c = 'black')
 # plt.legend()
 # plt.title('average accuracy: %.4f'%(np.mean(accuracies)))
 
@@ -209,5 +223,27 @@ x_range_future = np.arange(len(results[0]))
 
 # plt.show()
 
-print(results)
-print(accepted_results) 
+accepted_results_arr = np.array(accepted_results)
+print(accepted_results_arr[:, -3:])
+
+last_3_days = accepted_results_arr[:, -3:]
+one_day_errors = []
+for index, value in enumerate(true_values):
+    average = np.average(last_3_days[:, index])
+    one_day_error = np.absolute((value - average) / value)
+    one_day_errors.append(one_day_error)
+
+print('one_day_errors:')
+print(one_day_errors)
+
+results_frame = pd.DataFrame(accepted_results)
+results_frame.to_csv('./{}_{}_predictions.csv'.format(COMPANY_NAME, COLUMN_USED))
+
+one_day_errors_raw = []
+for index, value in enumerate(true_values):
+    average = np.average(last_3_days[:, index])
+    one_day_error_raw = (value - average) / value
+    one_day_errors_raw.append(one_day_error_raw)
+
+print('one_day_errors_raw:')
+print(one_day_errors_raw)
