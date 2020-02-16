@@ -6,6 +6,8 @@ if not sys.warnoptions:
 	
 import tensorflow as tf
 import numpy as np
+import matplotlib
+matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
@@ -15,10 +17,10 @@ from datetime import timedelta
 from tqdm import tqdm
 sns.set()
 
-df = pd.read_excel('../dataset/hchi_ratio_simplified.xlsx')
+df = pd.read_excel('../dataset/hchi_ratio.xlsx')
 df.head()
 
-TEST_SIZE = 60 # minutes
+TEST_SIZE = 1440 # minutes
 DATASET_SIZE = df.shape[0] # rows
 
 minmax = MinMaxScaler().fit(df.loc[:DATASET_SIZE - TEST_SIZE - 1, 'HCHI'].astype('float32').values.reshape(-1, 1)) # select HCHI ratio column
@@ -27,7 +29,7 @@ df_log = pd.DataFrame(df_log)
 df_log.head()
 df_log.shape
 
-simulation_size = 2
+simulation_size = 10
 num_layers = 1
 size_layer = 128
 timestamp = 5
@@ -220,4 +222,4 @@ x_range_future = np.arange(len(results[0]))
 tick_size = int(DATASET_SIZE / 20)
 plt.xticks(x_range_future[::tick_size], date_ori[::tick_size])
 plt.gcf().autofmt_xdate()
-plt.savefig('plot.png')
+plt.savefig('HCHI_predictions.png')

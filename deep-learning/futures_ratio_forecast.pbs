@@ -2,7 +2,7 @@
 
 #PBS -N futures_ratio_forecast
 #PBS -q normal
-#PBS -l select=1:ncpus=1:mem=4G
+#PBS -l select=1:ncpus=20:mem=80G
 #PBS -l walltime=99:00:00
 #PBS -P Personal
 #PBS -j oe
