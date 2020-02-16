@@ -74,8 +74,8 @@ class Model:
         )
         
 def calculate_accuracy(real, predict):
-    real = np.array(real) + 1
-    predict = np.array(predict) + 1
+    real = np.array(real)
+    predict = np.array(predict)
     percentage = 1 - np.sqrt(np.mean(np.square((real - predict) / real)))
     return percentage * 100
 
@@ -194,23 +194,30 @@ results_frame = pd.DataFrame(accepted_results)
 results_frame = results_frame.transpose() 
 
 results_frame['Dates'] = date_ori
+results_frame['Avg'] = np.mean(results_frame, axis=1)
 cols = results_frame.columns.tolist()
-cols = cols[-1:] + cols[:-1] # move 'Dates' column in front
+cols = cols[-2:] + cols[:-2] # reorder columns
 results_frame = results_frame[cols] 
 
 results_frame.to_excel('./HCHI_predictions.xlsx')
 results_frame.head
 
-accuracies = [calculate_accuracy(df['HCHI'].values, r[:]) for r in accepted_results]
+train_accuracies = [calculate_accuracy(df.loc[:DATASET_SIZE - TEST_SIZE - 1, 'HCHI'].values, r[:DATASET_SIZE - TEST_SIZE]) for r in accepted_results]
+test_accuracies = [calculate_accuracy(df.loc[DATASET_SIZE - TEST_SIZE:, 'HCHI'].values, r[DATASET_SIZE - TEST_SIZE:]) for r in accepted_results]
+avg_train_acc = np.mean(train_accuracies)
+avg_test_acc = np.mean(test_accuracies)
+accuracy_statement = 'average train accuracy: {0:.4f} \n average test accuracy: {1:.4f}'.format(avg_train_acc, avg_test_acc)
+print(accuracy_statement)
 
 plt.figure(figsize = (15, 5))
 for no, r in enumerate(accepted_results):
     plt.plot(r, label = 'forecast %d'%(no + 1))
 plt.plot(df['HCHI'], label = 'true trend', c = 'black')
 plt.legend()
-plt.title('average accuracy: %.4f'%(np.mean(accuracies)))
+plt.title(accuracy_statement)
 
 x_range_future = np.arange(len(results[0]))
-plt.xticks(x_range_future[::30], date_ori[::30])
+tick_size = int(DATASET_SIZE / 20)
+plt.xticks(x_range_future[::tick_size], date_ori[::tick_size])
+plt.gcf().autofmt_xdate()
 plt.savefig('plot.png')
-
