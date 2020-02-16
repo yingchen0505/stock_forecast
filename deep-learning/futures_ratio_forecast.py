@@ -18,6 +18,7 @@ from tqdm import tqdm
 sns.set()
 
 df = pd.read_excel('../dataset/hchi_ratio.xlsx')
+df = df.reset_index()
 df.head()
 
 TEST_SIZE = 1440 # minutes
@@ -182,7 +183,7 @@ for i in range(simulation_size):
     print('simulation %d'%(i + 1))
     results.append(forecast())
 	
-date_ori = df.iloc[:, 0]
+date_ori = df.loc[:, 'dates']
 date_ori[-5:]
 
 accepted_results = []
