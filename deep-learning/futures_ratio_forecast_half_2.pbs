@@ -1,0 +1,22 @@
+#!/bin/bash
+
+#PBS -N futures_half_2
+#PBS -q normal
+#PBS -l select=1:ncpus=24:mem=96G
+#PBS -l walltime=24:00:00
+#PBS -P Personal
+#PBS -j oe
+#PBS -o ./futures_ratio_forecast_half_2.o
+#PBS -e ./futures_ratio_forecast_half_2.e
+# mail alert at (b)eginning, (e)nd and (a)bortion of execution
+#PBS -m bea
+# send mail to the following address
+#PBS -M e0010911@u.nus.edu
+
+echo futures_ratio_forecast_half_2
+pwd
+cd $PBS_O_WORKDIR
+module load anaconda/3
+source activate tf_1.9
+export PYTHONHOME=${HOME}/.conda/envs/tf_1.9
+python futures_ratio_forecast_half_2.py
